@@ -1,4 +1,4 @@
-name: mongo-sharding-repl
+name: sharding-repl-cache
 
 services:
   # --- Config server (replSet: config_server) ---
@@ -139,21 +139,40 @@ services:
       shard2-3:
         condition: service_healthy
 
+  # --- Cache ---
+  redis:
+    container_name: redis
+    image: dh-mirror.gitverse.ru/redis:latest
+    command: [ redis-server, --appendonly, "yes" ]
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+    volumes:
+      - redis_data:/data
+
   # --- Application ---
   pymongo_api:
     container_name: pymongo_api
     image: kazhem/pymongo_api:1.0.0
-    # Без condition: service_healthy — mongos становится healthy только
-    # после инициализации config-реплики, то есть после шагов из README.md
     depends_on:
-      - mongos_router
+      # Без condition: service_healthy — mongos становится healthy только
+      # после инициализации config-реплики, то есть после шагов из README.md
+      mongos_router:
+        condition: service_started
+      redis:
+        condition: service_healthy
     ports:
       - 8080:8080
     environment:
       MONGODB_URL: "mongodb://mongos_router:27017"
       MONGODB_DATABASE_NAME: "somedb"
+      REDIS_URL: "redis://redis:6379"
 
 volumes:
+  redis_data:
   config_data:
   shard1_1_data:
   shard1_2_data:
