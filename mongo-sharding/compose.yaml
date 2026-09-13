@@ -95,7 +95,7 @@ services:
   pymongo_api:
     container_name: pymongo_api
     build:
-      context: api_app
+      context: ../api_app
       dockerfile: Dockerfile
     # Без condition: service_healthy — mongos становится healthy только
     # после инициализации config-реплики, то есть после ./scripts/mongo-init.sh
