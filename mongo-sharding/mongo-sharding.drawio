@@ -1,0 +1,58 @@
+<mxfile host="app.diagrams.net" agent="claude-code">
+  <diagram name="to-be-sharding" id="to-be-sharding-v1">
+    <mxGraphModel dx="1414" dy="747" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=18;fontStyle=1" value="Шардирование MongoDB (2 шарда)" vertex="1">
+          <mxGeometry height="30" width="520" x="60" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="client" parent="1" style="shape=mxgraph.basic.rect;whiteSpace=wrap;html=1;rounded=1;" value="Клиент&#xa;(браузер)" vertex="1">
+          <mxGeometry height="60" width="110" x="60" y="330" as="geometry" />
+        </mxCell>
+        <mxCell id="app" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="pymongo-api&#xa;:8080" vertex="1">
+          <mxGeometry height="60" width="130" x="240" y="330" as="geometry" />
+        </mxCell>
+        <mxCell id="clusterBox" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;fillColor=none;strokeColor=#666666;verticalAlign=top;fontStyle=2;align=left;spacingLeft=10;" value="MongoDB Sharded Cluster" vertex="1">
+          <mxGeometry height="480" width="560" x="440" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="mongos" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="mongos_router&#xa;:27017" vertex="1">
+          <mxGeometry height="60" width="130" x="480" y="330" as="geometry" />
+        </mxCell>
+        <mxCell id="cfgGroup" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;fillColor=#f5f5f5;strokeColor=#999999;verticalAlign=top;align=center;fontStyle=2;" value="Config Servers (replSet: config_server)" vertex="1">
+          <mxGeometry height="120" width="260" x="700" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="cfg1" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#e1d5e7;strokeColor=#9673a6;" value="configSrv&#xa;(configsvr)&#xa;:27017" vertex="1">
+          <mxGeometry height="80" width="70" x="795" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="shard1Group" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;fillColor=#f5f5f5;strokeColor=#999999;verticalAlign=top;align=center;fontStyle=2;" value="Shard 1 (replSet: shard1)" vertex="1">
+          <mxGeometry height="120" width="260" x="700" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="shard1" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#d5e8d4;strokeColor=#82b366;" value="shard1-1&#xa;(shardsvr)&#xa;:27017" vertex="1">
+          <mxGeometry height="80" width="70" x="795" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="shard2Group" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;fillColor=#f5f5f5;strokeColor=#999999;verticalAlign=top;align=center;fontStyle=2;" value="Shard 2 (replSet: shard2)" vertex="1">
+          <mxGeometry height="120" width="260" x="700" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="shard2" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#d5e8d4;strokeColor=#82b366;" value="shard2-1&#xa;(shardsvr)&#xa;:27017" vertex="1">
+          <mxGeometry height="80" width="70" x="795" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="app" value="HTTP :8080">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="app" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;verticalAlign=bottom;" target="mongos" value="mongodb://mongos_router:27017">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="mongos" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" target="cfg1" value="метаданные кластера">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="mongos" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" target="shard1" value="чтение/запись чанков">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="mongos" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" target="shard2" value="чтение/запись чанков">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
